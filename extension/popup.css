@@ -1,0 +1,153 @@
+:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #1c1b1f;
+  --muted: #6b6870;
+  --line: #dcdae0;
+  --field: #f4f3f6;
+  --accent: #b3261e;
+  --on-accent: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #2b2a33;
+    --fg: #fbfbfe;
+    --muted: #b1afb8;
+    --line: #52505c;
+    --field: #3a3944;
+    --accent: #ff8a7f;
+    --on-accent: #1c1b1f;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 320px;
+  margin: 0;
+  padding: 14px;
+  background: var(--bg);
+  color: var(--fg);
+  font: 13px/1.4 system-ui, sans-serif;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.clock {
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.time {
+  font: 600 28px/1.2 ui-monospace, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.mono {
+  font: 15px ui-monospace, Menlo, monospace;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+form label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+form input:not([type='checkbox']) {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--field);
+  color: inherit;
+  font: inherit;
+}
+
+label.check {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 7px;
+}
+
+label.check:has(input:disabled) {
+  color: var(--muted);
+}
+
+input[type='checkbox'] {
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+button {
+  width: 100%;
+  margin-top: 8px;
+  padding: 9px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--field);
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button.primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+button:hover {
+  filter: brightness(0.95);
+}
+
+.armed-title,
+.result-title {
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.armed-title {
+  color: var(--accent);
+}
+
+.error {
+  margin: 10px 0 0;
+  color: var(--accent);
+}
+
+#result {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+dl {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 10px;
+  margin: 0;
+}
+
+dd {
+  margin: 0;
+  font-family: ui-monospace, Menlo, monospace;
+  text-align: right;
+}

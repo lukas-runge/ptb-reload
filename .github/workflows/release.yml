@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - name: Tag gegen Manifest-Version prüfen
+        run: test "v$(node -p "require('./extension/manifest.json').version")" = "$GITHUB_REF_NAME"
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - name: Für die Installation außerhalb des Katalogs signieren
+        env:
+          AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
+          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        run: |
+          if [ -z "$AMO_JWT_ISSUER" ] || [ -z "$AMO_JWT_SECRET" ]; then
+            echo "::warning::AMO-Zugangsdaten fehlen. Das Release enthält nur das unsignierte ZIP."
+            exit 0
+          fi
+          npx web-ext sign --source-dir extension --channel unlisted \
+            --api-key "$AMO_JWT_ISSUER" --api-secret "$AMO_JWT_SECRET"
+      - name: GitHub-Release erstellen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" web-ext-artifacts/* --generate-notes

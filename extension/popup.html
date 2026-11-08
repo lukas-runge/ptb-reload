@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <title>PTB Reload</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="head">
+      <img src="icons/icon.svg" alt="" width="20" height="20" />
+      <span>PTB Reload</span>
+    </header>
+
+    <section class="clock">
+      <div id="ptb-time" class="time">--:--:--,---</div>
+      <div id="clock-info" class="muted">Verbinde mit uhr.ptb.de …</div>
+    </section>
+
+    <form id="form">
+      <label>
+        Zeitpunkt (Ortszeit)
+        <input id="target" type="datetime-local" step="1" required />
+      </label>
+      <label>
+        Versatz in ms
+        <input id="offset" type="number" step="1" value="0" />
+      </label>
+      <label class="check">
+        <input id="hard" type="checkbox" />
+        Hard-Reload ohne Cache
+      </label>
+      <label class="check">
+        <input id="warmup" type="checkbox" />
+        Verbindung vorwärmen (Testanfragen)
+      </label>
+      <label class="check">
+        <input id="lead" type="checkbox" />
+        Vorlauf bis 30 ms (kann zu früh ankommen)
+      </label>
+      <button id="arm" class="primary" type="submit">Aktuellen Tab scharf schalten</button>
+    </form>
+
+    <section id="armed" hidden>
+      <div class="armed-title">Scharf</div>
+      <div id="armed-time" class="mono"></div>
+      <div class="muted">Tab und Fenster sichtbar lassen.</div>
+      <button id="cancel" type="button">Abbrechen</button>
+    </section>
+
+    <p id="error" class="error" hidden></p>
+
+    <section id="result" hidden>
+      <div class="result-title">Letzter Reload</div>
+      <dl id="result-list"></dl>
+    </section>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

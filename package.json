@@ -1,0 +1,15 @@
+{
+  "name": "ptb-reload",
+  "private": true,
+  "description": "Firefox-Erweiterung: Tab zu einem exakten Zeitpunkt nach PTB-Zeit neu laden.",
+  "scripts": {
+    "lint": "web-ext lint --source-dir extension --warnings-as-errors",
+    "build": "web-ext build --source-dir extension --overwrite-dest",
+    "dev": "web-ext run --source-dir extension",
+    "test:smoke": "node test/smoke.mjs",
+    "test-server": "node tools/test-server.js"
+  },
+  "devDependencies": {
+    "web-ext": "^10.8.0"
+  }
+}
