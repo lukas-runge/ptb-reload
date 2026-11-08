@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "PTB Reload",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Lädt den aktuellen Tab zu einem exakten Zeitpunkt nach PTB-Atomuhrzeit neu.",
   "author": "Lukas Runge",
   "icons": {
