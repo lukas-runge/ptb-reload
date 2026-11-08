@@ -4,15 +4,22 @@
 
 Firefox-Erweiterung, die einen Tab zu einem festgelegten Zeitpunkt neu lädt, zum Beispiel beim Start eines Ticket-Vorverkaufs. Die Zeit kommt direkt von der Uhr der Physikalisch-Technischen Bundesanstalt auf [uhr.ptb.de](https://uhr.ptb.de), die Systemuhr wird nur als Zwischenschritt genutzt.
 
-Das Projekt gehört nicht zur PTB. Es nutzt den WebSocket `wss://uhr.ptb.de/time`, über den auch die PTB-Webuhr läuft. Der Endpunkt ist nicht offiziell dokumentiert und kann sich ändern.
-
-<img src="docs/popup.png" alt="Popup der Erweiterung" width="320">
-
 ## Installation
 
-Die Schritte für Firefox stehen in [INSTALL.md](INSTALL.md). Nötig ist Firefox 142 oder neuer.
+Du brauchst Firefox 142 oder neuer.
+
+1. Die [aktuelle Version unter GitHub Releases](https://github.com/lukas-runge/ptb-reload/releases/latest) öffnen und unter **Assets** die Datei herunterladen, die auf `.xpi` endet.
+2. Die `.xpi`-Datei in ein Firefox-Fenster ziehen.
+3. Die Nachfrage mit **Hinzufügen** bestätigen.
+4. Das Puzzle-Symbol in der Symbolleiste öffnen und PTB Reload über das Zahnrad anheften.
+
+Die Erweiterung bleibt danach auch nach einem Neustart installiert. Das Repository ist privat. Wer keinen Zugriff darauf hat, braucht die `.xpi`-Datei direkt vom Projektinhaber.
+
+Zum Testen klickst du auf das Symbol. Oben muss eine laufende Uhrzeit stehen. Bleibt dort `Verbinde mit uhr.ptb.de` stehen, blockiert meist eine Firewall oder ein Werbeblocker die Verbindung.
 
 ## Benutzung
+
+<img src="docs/popup.png" alt="Popup der Erweiterung" width="320">
 
 1. Die Seite öffnen, die neu geladen werden soll.
 2. Auf das Symbol von PTB Reload klicken.
@@ -20,6 +27,8 @@ Die Schritte für Firefox stehen in [INSTALL.md](INSTALL.md). Nötig ist Firefox
 4. Tab und Fenster sichtbar lassen und den Computer nicht schlafen legen. Oben rechts auf der Seite läuft ein Countdown mit Abbrechen-Knopf.
 
 Nach dem Reload zeigt das Popup, wie weit Auslösung, Navigation, Request und erstes Byte vom Soll entfernt lagen. Liegt der Zeitpunkt mehr als 5 Sekunden zurück, zum Beispiel nach dem Ruhezustand, lädt die Erweiterung nicht mehr neu und meldet das.
+
+Für einen Vorverkauf empfehle ich **Verbindung vorwärmen** an und **Vorlauf** aus. Kommt noch die alte Seite, einfach von Hand neu laden, denn die Erweiterung lädt pro Planung nur einmal.
 
 ## Optionen
 
@@ -47,6 +56,8 @@ Gemessen mit Firefox 159 im Headless-Modus und einem lokalen Server. Die Netzlau
 | 5/5 ms, Favicon 100 ms langsam | Vorwärmen und Vorlauf | −24 bis −15 ms |
 
 Die absolute Genauigkeit gegenüber der PTB liegt bei etwa ±10 ms, weil Hin- und Rückweg zur PTB nie exakt gleich lang sind. Die größte Unbekannte bleibt die Uhr des Ticket-Servers. Sie kann deutlich stärker abweichen als alle Werte in dieser Tabelle.
+
+Das Projekt gehört nicht zur PTB. Es nutzt den WebSocket `wss://uhr.ptb.de/time`, über den auch die PTB-Webuhr läuft. Der Endpunkt ist nicht offiziell dokumentiert und kann sich ändern.
 
 ## Datenschutz und Berechtigungen
 
