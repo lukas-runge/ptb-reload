@@ -41,8 +41,9 @@
     </form>
 
     <section id="armed" hidden>
-      <div class="armed-title">Scharf</div>
+      <div id="armed-title" class="armed-title">Scharf</div>
       <div id="armed-time" class="mono"></div>
+      <div id="armed-remaining" class="mono"></div>
       <div class="muted">Tab und Fenster sichtbar lassen.</div>
       <button id="cancel" type="button">Abbrechen</button>
     </section>
@@ -54,6 +55,7 @@
       <dl id="result-list"></dl>
     </section>
 
+    <script src="countdown.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>

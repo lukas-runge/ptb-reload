@@ -6,6 +6,7 @@
     "lint": "web-ext lint --source-dir extension --warnings-as-errors",
     "build": "web-ext build --source-dir extension --overwrite-dest",
     "dev": "web-ext run --source-dir extension",
+    "test": "node --test test/*.test.mjs",
     "test:smoke": "node test/smoke.mjs",
     "test-server": "node tools/test-server.js"
   },

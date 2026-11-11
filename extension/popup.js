@@ -72,9 +72,17 @@ function saveForm() {
 }
 
 function renderClock() {
-  if (status && status.clock) {
-    $('ptb-time').textContent = formatTime(Date.now() + status.clock.offsetMs);
+  if (!status || !status.clock) return;
+  const ptbMs = Date.now() + status.clock.offsetMs;
+  $('ptb-time').textContent = formatTime(ptbMs);
+  if (status.job && status.job.state === 'armed') {
+    $('armed-remaining').textContent = `noch ${formatRemaining(status.job.targetMs - ptbMs)}`;
   }
+}
+
+function formatServerRtt(result) {
+  const source = result.rttSource === 'handshake' ? 'Verbindungsaufbau' : 'Anfrage';
+  return `${Math.round(result.serverRttMs)} ms (${source})`;
 }
 
 function renderResult(result) {
@@ -82,7 +90,7 @@ function renderResult(result) {
   if (!result) return;
   const probed = result.serverRttMs !== null && result.serverRttMs !== undefined;
   const rows = [
-    ['Server-RTT', probed ? `${Math.round(result.serverRttMs)} ms` : undefined],
+    ['RTT zum Server', probed ? formatServerRtt(result) : undefined],
     ['Vorlauf', probed ? `${Math.round(result.leadMs)} ms` : undefined],
     ['Ausgelöst', formatDelta(result.firedDeltaMs)],
     ['Navigation', result.navigationDeltaMs],
@@ -113,7 +121,13 @@ function render() {
   }
   $('form').hidden = Boolean(job);
   $('armed').hidden = !job;
-  if (job) $('armed-time').textContent = formatTime(job.targetMs);
+  if (job) {
+    const fired = job.state === 'fired';
+    $('armed-title').textContent = fired ? 'Ausgelöst' : 'Scharf';
+    $('armed-time').textContent = formatTime(job.targetMs);
+    // A busy server can take a while; the result appears once the page has loaded.
+    if (fired) $('armed-remaining').textContent = 'Warte, bis die Seite geladen ist …';
+  }
   const error = localError || lastError;
   $('error').hidden = !error;
   $('error').textContent = error || '';
