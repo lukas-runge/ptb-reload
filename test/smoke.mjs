@@ -29,8 +29,11 @@ const LEAD_TIME_MS = 7000;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 let pageLoads = 0;
+let probes = 0;
 const server = http.createServer((request, response) => {
   if (request.method === 'GET' && request.url === '/') pageLoads += 1;
+  // Firefox's own favicon request has the destination "image", the warm-up "empty".
+  else if (request.headers['sec-fetch-dest'] === 'empty') probes += 1;
   response.writeHead(200, { 'content-type': 'text/html', 'cache-control': 'no-cache' });
   response.end('<!doctype html><title>smoke</title><h1>smoke</h1>');
 });
@@ -139,9 +142,13 @@ async function main() {
     async function reloadOnce(name, options) {
       await switchTo(popupTab);
       const before = pageLoads;
+      const probesBefore = probes;
       const previous = JSON.stringify(await readResult());
       const targetMs = nextTarget();
       assert.equal(await send({ type: 'arm', tabId, targetMs, ...options }), 'ok');
+      await sleep(300);
+      const remaining = await run('return document.getElementById("armed-remaining").textContent');
+      assert.match(remaining, /^noch \d,\d Sekunden$/, `${name}: Countdown im Popup fehlt`);
       await switchTo(pageTab);
       await sleep(targetMs - Date.now() + 800);
       await switchTo(popupTab);
@@ -152,6 +159,7 @@ async function main() {
         result = await readResult();
       }
       assert.equal(pageLoads - before, 1, `${name}: erwartet genau einen Reload`);
+      assert.equal(probes - probesBefore, options.warmUp ? 1 : 0, `${name}: Anzahl Testanfragen`);
       const errorMs = parseMs(result['Ausgelöst']);
       assert.ok(
         Math.abs(errorMs) <= MAX_TRIGGER_ERROR_MS,
@@ -163,7 +171,7 @@ async function main() {
 
     await reloadOnce('Reload zum Zeitpunkt', {});
     const warmed = await reloadOnce('Reload mit Vorwärmen', { warmUp: true });
-    assert.ok(warmed['Server-RTT'], 'Vorwärmen hat keine Server-RTT gemessen');
+    assert.match(warmed['RTT zum Server'] || '', /^\d+ ms \(/, 'Vorwärmen hat keine RTT gemessen');
     await reloadOnce('Hard-Reload', { hardReload: true });
 
     assert.match(

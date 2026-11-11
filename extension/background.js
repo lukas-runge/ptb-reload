@@ -155,6 +155,7 @@ function sendJobToTab() {
 }
 
 async function injectTrigger(tabId) {
+  await browser.tabs.executeScript(tabId, { file: 'countdown.js', runAt: 'document_start' });
   await browser.tabs.executeScript(tabId, { file: 'trigger.js', runAt: 'document_start' });
 }
 
@@ -216,6 +217,7 @@ function onFired(message, tabId) {
   job.firedPtbMs = message.ptbMs;
   job.leadMs = message.leadMs;
   job.serverRttMs = message.serverRttMs;
+  job.rttSource = message.rttSource;
   if (message.hardReload) browser.tabs.reload(tabId, { bypassCache: true });
   publishStatus();
 }
@@ -232,13 +234,14 @@ const READ_NAVIGATION_TIMING = `(() => {
 })();`;
 
 async function collectResult() {
-  const { tabId, targetMs, firedPtbMs, leadMs, serverRttMs } = job;
+  const { tabId, targetMs, firedPtbMs, leadMs, serverRttMs, rttSource } = job;
   const result = {
     targetMs,
     firedDeltaMs: firedPtbMs - targetMs,
     rttMs: clock.rttMs,
     leadMs,
     serverRttMs,
+    rttSource,
   };
   try {
     const [timing] = await browser.tabs.executeScript(tabId, { code: READ_NAVIGATION_TIMING });

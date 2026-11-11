@@ -21,6 +21,7 @@ jobs:
         run: test "v$(node -p "require('./extension/manifest.json').version")" = "$GITHUB_REF_NAME"
       - run: npm ci
       - run: npm run lint
+      - run: npm test
       - run: npm run build
       - name: Für die Installation außerhalb des Katalogs signieren
         env:
